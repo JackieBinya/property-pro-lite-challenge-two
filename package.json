@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev:start": "nodemon --exec babel-node server/src/v1/app.js",
+    "start": "babel-node server/src/v1/app.js",
     "test": "mocha --require @babel/register './server/src/**/*.test.js' --timeout 50000 --exit"
   },
   "repository": {
