@@ -397,7 +397,7 @@ describe('properties', () => {
       });
   });
 
-  it('GET /, should get all property ads ', (done) => {
+  it('GET /property, should get all property ads ', (done) => {
     chai
       .request(app)
       .get('/api/v1/property')
@@ -409,4 +409,18 @@ describe('properties', () => {
         done(err);
       });
   });
+
+  it('GET /property, should get property ads of a specific type',  (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/property/?type=1%20bedroom')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.equal('success');
+        expect(res.body.data).to.be.a('array');
+        expect(res.body.data.length).to.be.equal(0);
+        done(err);
+      });
+  });
 });
+
