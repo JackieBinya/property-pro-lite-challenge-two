@@ -22,6 +22,7 @@ const router = Router();
 
 router.get('/', fetchAllProperties);
 router.get('/', findAdsOfSpecificType);
+router.get('/:propertyId', fetchSpecificProperty);
 
 // Auth user all routes for authenticated user/agents
 router.use(verifyAuthUser);

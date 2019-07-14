@@ -410,7 +410,7 @@ describe('properties', () => {
       });
   });
 
-  it('GET /property, should get property ads of a specific type',  (done) => {
+  it('GET /property, should get property ads of a specific type', (done) => {
     chai
       .request(app)
       .get('/api/v1/property/?type=1%20bedroom')
@@ -422,5 +422,42 @@ describe('properties', () => {
         done(err);
       });
   });
-});
 
+  it('GET /property/:propertyId, should get a specific property ad', (done) => {
+    const property = models.Property.create({
+      imageUrl: 'my image 04',
+      address: '4 De Waat Terraces, Goodwood',
+      state: 'Goodwood',
+      city: 'Bulawayo',
+      title: 'One bedroom  in a quiet surburb',
+      description: 'Cosy bedsitter, suitable for singles',
+      price: '$120',
+      type: '1 bedroom',
+      owner: '123',
+    });
+
+    chai
+      .request(app)
+      .get(`/api/v1/property/${property.id}`)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.equal('success');
+        expect(res.body.data).to.be.a('object');
+        expect(res.body.data).to.have.key('imageUrl', 'address', 'state', 'city', 'id', 'status', 'type', 'price', 'title', 'description', 'createdOn', 'owner');
+        done(err);
+      });
+  });
+
+  it('GET /property/:propertyId, should not get an advert if provide a non existant id', (done) => {
+    const id = 'abcdef';
+
+    chai
+      .request(app)
+      .get(`/api/v1/property/${id}`)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.msg).to.be.equal('Property ad is not found!');
+        done(err);
+      });
+  });
+});
