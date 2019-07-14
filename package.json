@@ -6,7 +6,8 @@
   "scripts": {
     "dev:start": "nodemon --exec babel-node server/src/v1/app.js",
     "start": "babel-node server/src/v1/app.js",
-    "test": "mocha --require @babel/register './server/src/**/*.test.js' --timeout 50000 --exit"
+    "test": "mocha --require @babel/register './server/src/**/*.test.js' --timeout 50000 --exit",
+    "test:test":"nyc mocha --require @babel/register './server/src/**/*.test.js' --exit"
   },
   "repository": {
     "type": "git",
