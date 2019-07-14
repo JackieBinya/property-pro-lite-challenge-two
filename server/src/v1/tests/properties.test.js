@@ -363,4 +363,37 @@ describe('properties', () => {
         done(err);
       });
   });
+
+  it('DELETE /property/:propertyId, should enable a user to delete their own ad', (done) => {
+    const newUser = models.User.create({
+      firstName: 'foo',
+      lastName: 'bar',
+      email: 'foo@bar.com',
+      password: 'abcdef',
+    });
+
+    const newPropertyAd = models.Property.create({
+      imageUrl: 'my image 08',
+      address: '4 De Waat Terraces, Goodwood',
+      state: 'Goodwood',
+      city: 'Bulawayo',
+      title: 'One bedroom  in a quiet surburb',
+      description: 'Cosy bedsitter, suitable for singles',
+      price: '$120',
+      type: '1 bedroom',
+      owner: `${newUser.id}`,
+    });
+
+    const newToken = generateToken(newUser.id);
+
+    chai
+      .request(app)
+      .delete(`/api/v1/property/${newPropertyAd.id}`)
+      .set('x-auth-token', newToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.msg).to.be.equal('Property ad is sucessfully deleted');
+        done(err);
+      });
+  });
 });
