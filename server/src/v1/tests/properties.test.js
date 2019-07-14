@@ -324,4 +324,43 @@ describe('properties', () => {
         done(err);
       });
   });
+
+  it('PATCH /:propertyId/sold, should mark a property as sold', (done) => {
+    const newUser = models.User.create({
+      firstName: 'foo',
+      lastName: 'bar',
+      email: 'foo@bar.com',
+      password: 'abcdef',
+    });
+
+    const property = models.Property.create({
+      imageUrl: 'my image 06',
+      address: '4 De Waat Terraces, Goodwood',
+      state: 'Goodwood',
+      city: 'Bulawayo',
+      title: 'One bedroom  in a quiet surburb',
+      description: 'Cosy bedsitter, suitable for singles',
+      price: '$120',
+      type: '1 bedroom',
+      owner: `${newUser.id}`,
+    });
+
+    const myToken = generateToken(newUser.id);
+
+    chai
+      .request(app)
+      .patch(`/api/v1/property/${property.id}/sold`)
+      .set('x-auth-token', myToken)
+      .send({
+        title: '1 bed in Goodwood, TO RENT!',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.data).to.be.a('object');
+        expect(res.body.data).to.have.key('imageUrl', 'address', 'state', 'city', 'title', 'description', 'price', 'type', 'id', 'status', 'owner', 'createdOn');
+        expect(res.body.data.id).to.be.equal(`${property.id}`);
+        expect(res.body.data.status).to.equal('sold');
+        done(err);
+      });
+  });
 });
