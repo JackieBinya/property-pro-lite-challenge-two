@@ -28,6 +28,6 @@ router.use(verifyAuthUser);
 
 router.post('/', cloudinaryConfig, multerUpload, imageFormatValidator, uploadImage, postPropertyAdValiadator, createPropertyAd);
 router.patch('/:propertyId', verifyExistingProperty, verifyPropertyBelongsToUser, editAdValidator, editPropertyAd);
-
+router.patch('/:propertyId/sold', verifyExistingProperty, verifyPropertyBelongsToUser, markPropertySold);
 
 export default router;
