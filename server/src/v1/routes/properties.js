@@ -27,6 +27,7 @@ const router = Router();
 router.use(verifyAuthUser);
 
 router.post('/', cloudinaryConfig, multerUpload, imageFormatValidator, uploadImage, postPropertyAdValiadator, createPropertyAd);
+router.patch('/:propertyId', verifyExistingProperty, verifyPropertyBelongsToUser, editAdValidator, editPropertyAd);
 
 
 export default router;

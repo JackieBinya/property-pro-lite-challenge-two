@@ -156,7 +156,7 @@ describe('properties', () => {
       });
   });
 
-  it('POST /property, should not post / if user does not fill in title field', (done)  => {
+  it('POST /property, should not post / if user does not fill in title field', (done) => {
     chai
       .request(app)
       .post('/api/v1/property')
@@ -282,6 +282,45 @@ describe('properties', () => {
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res.body.msg).to.equal('Please select a type that matches your property.');
+        done(err);
+      });
+  });
+
+  it('PATCH /:propertyId, should update an existing ads title given id', (done) => {
+    const newUser = models.User.create({
+      firstName: 'foo',
+      lastName: 'bar',
+      email: 'foo@bar.com',
+      password: 'abcdef',
+    });
+
+    const property = models.Property.create({
+      imageUrl: 'my image 05',
+      address: '4 De Waat Terraces, Goodwood',
+      state: 'Goodwood',
+      city: 'Bulawayo',
+      title: 'One bedroom  in a quiet surburb',
+      description: 'Cosy bedsitter, suitable for singles',
+      price: '$120',
+      type: '1 bedroom',
+      owner: `${newUser.id}`,
+    });
+
+    const myToken = generateToken(newUser.id);
+
+    chai
+      .request(app)
+      .patch(`/api/v1/property/${property.id}`)
+      .set('x-auth-token', myToken)
+      .send({
+        title: '1 bed in Goodwood, TO RENT!',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.data).to.be.a('object');
+        expect(res.body.data).to.have.key('imageUrl', 'address', 'state', 'city', 'title', 'description', 'price', 'type', 'id', 'status', 'owner', 'createdOn');
+        expect(res.body.data.id).to.be.equal(`${property.id}`);
+        expect(res.body.data.title).to.equal('1 bed in Goodwood, TO RENT!');
         done(err);
       });
   });
