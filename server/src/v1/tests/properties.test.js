@@ -460,4 +460,52 @@ describe('properties', () => {
         done(err);
       });
   });
+
+  it('GET /my-ads, it should not get ads if user has not posted any', (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/my-ads')
+      .set('x-auth-token', token)
+      .end((err, res) => {
+        expect(res).to.has.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.msg).to.be.equal('No properties found!');
+        done(err);
+      });
+  });
+
+  it('GET /my-ads, should get all ads posted by a particular user given their id', (done) => {
+    const newUser = models.User.create({
+      firstName: 'foo',
+      lastName: 'bar',
+      email: 'foo@bar.com',
+      password: 'abcdef',
+    });
+
+    const newPropertyAd = models.Property.create({
+      imageUrl: 'my image 09',
+      address: '4 De Waat Terraces, Goodwood',
+      state: 'Goodwood',
+      city: 'Bulawayo',
+      title: 'One bedroom  in a quiet surburb',
+      description: 'Cosy bedsitter, suitable for singles',
+      price: '$120',
+      type: '1 bedroom',
+      owner: `${newUser.id}`,
+    });
+
+    const newToken = generateToken(newUser.id);
+
+    chai
+      .request(app)
+      .get('/api/v1/my-ads')
+      .set('x-auth-token', newToken)
+      .end((err, res) => {
+        expect(res).to.has.status(200);
+        expect(res.body.status).to.be.equal('success');
+        expect(res.body.data).to.be.a('array');
+        expect(res.body.data.length).to.be.equal(1);
+        done(err);
+      });
+  });
 });

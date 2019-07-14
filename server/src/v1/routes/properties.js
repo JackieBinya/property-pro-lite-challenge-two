@@ -21,7 +21,7 @@ import { verifyAuthUser, verifyExistingProperty, verifyPropertyBelongsToUser } f
 const router = Router();
 
 router.get('/', fetchAllProperties);
-router.get('/', findAdsOfSpecificType);
+router.get('/type', findAdsOfSpecificType);
 router.get('/:propertyId', fetchSpecificProperty);
 
 // Auth user all routes for authenticated user/agents

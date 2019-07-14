@@ -13,6 +13,7 @@ const port = process.env.PORT || 8001;
 
 app.use('/api/v1', routes.users);
 app.use('/api/v1/property', routes.properties);
+app.use('/api/v1/my-ads', routes.myAds);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
 
